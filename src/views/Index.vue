@@ -4,7 +4,7 @@
       <div class="col-8">
         <router-link
           to="/create"
-          class="btn btn-primary btn-sm rounded shadow mb-3"
+          class="btn btn-primary btn-sm rounded shadow mb-3 me-4"
           >Add User
         </router-link>
         <router-link
@@ -35,16 +35,16 @@
         </div>
       </div>
     </div>
-    <div class="card mt-5 rounded shadow" style="width: 18rem">
-      <div class="card-body">
-        <h5 class="card-title">Card title</h5>
-        <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
-        <p class="card-text">
-          Some quick example text to build on the card title and make up the
-          bulk of the card's content.
-        </p>
-        <a href="#" class="card-link">Card link</a>
-        <a href="#" class="card-link">Another link</a>
+    <div class="container d-flex flex-wrap">
+      <div v-for="card in grouplist" :key="card.id">
+        <div class="card mt-5 rounded shadow" style="width: 18rem">
+          <div class="card-body">
+            <h5 class="card-title">{{ card.grupname }}</h5>
+            <h6 class="card-subtitle mb-2 text-muted"></h6>
+            <p class="card-text">{{ card?.pertama?.email }}</p>
+            <p class="card-text">{{ card?.kedua?.email }}</p>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -60,13 +60,14 @@ export default {
     };
   },
   async mounted() {
-    let result = await axios.get("https://vue-be.herokuapp.com/api/v1/users");
-    console.warn(result.data.data.users);
-    this.list = result.data.data.users;
-  },
-  async mounted() {
+    let response = await axios.get(
+      "https://vue-fix.herokuapp.com/api/v1/members"
+    );
+    console.log(response.data.data);
+    this.list = response.data.data;
+
     let result = await axios.get("https://vue-fix.herokuapp.com/api/v1/groups");
-    console.warn(result.data.data.users);
+    console.log(result.data.data);
     this.grouplist = result.data.data;
   },
 };

@@ -83,7 +83,7 @@ export default {
             //set token
             localStorage.setItem("token", response.data.data.token);
 
-            //redirect ke halaman dashboard
+            //redirect ke halaman home
             return router.push("/");
           }
 

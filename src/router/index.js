@@ -4,6 +4,7 @@ import Navbar from '../views/Navbar.vue'
 import Login from '../views/Login.vue'
 import Create from '../views/Create.vue'
 import CreateGroup from '../views/CreateGroup.vue'
+import Register from '../views/Register.vue'
 
 const routes = [
   {
@@ -28,6 +29,11 @@ const routes = [
     path: '/add-group',
     name: 'CreateGroup',
     component: CreateGroup
+  },
+  {
+    path: '/register',
+    name: 'Register',
+    component: Register
   },
 ]
 

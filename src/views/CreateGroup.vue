@@ -21,14 +21,15 @@
                 <label>Select users</label>
                 <select
                   class="form-select"
-                  v-model="user.pertama"
+                  v-model="user.anggotapertama"
                   aria-label="Default select example"
                   as="select"
                 >
                   <option
                     v-for="item in grouplist"
+                    :value="item.id"
                     :key="item.id"
-                    value="item.id"
+                    :selected="item === user.anggotapertama"
                   >
                     {{ item.email }}
                   </option>
@@ -36,10 +37,17 @@
                 <label>Select users</label>
                 <select
                   class="form-select"
-                  v-model="user.kedua"
+                  v-model="user.anggotakedua"
                   aria-label="Default select example"
+                  as="select"
                 >
-                  <option v-for="item in grouplist" :key="item.id">
+                  <option value="" disabled></option>
+                  <option
+                    v-for="item in grouplist"
+                    :value="item.id"
+                    :key="item.id"
+                    :selected="item === user.anggotakedua"
+                  >
                     {{ item.email }}
                   </option>
                 </select>
@@ -70,8 +78,8 @@ export default {
     //state user
     const user = reactive({
       grupname: "",
-      pertama: "",
-      kedua: "",
+      anggotapertama: "",
+      anggotakedua: "",
     });
 
     //state validation
@@ -81,18 +89,18 @@ export default {
     function addgroup() {
       //define variable
       let grupname = user.grupname;
-      let pertama = user.pertama;
-      let kedua = user.kedua;
+      let anggotapertama = user.anggotapertama;
+      let anggotakedua = user.anggotakedua;
 
       //send server with axios
       axios
         .post("https://vue-fix.herokuapp.com/api/v1/group", {
           grupname,
-          pertama,
-          kedua,
+          anggotapertama,
+          anggotakedua,
         })
         .then(() => {
-          //redirect ke halaman login
+          //redirect ke halaman home
           return router.push("/");
         })
         .catch((error) => {
