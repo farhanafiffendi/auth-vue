@@ -2,14 +2,14 @@
   <div class="container-fluid mt-5">
     <div class="row justify-content-center">
       <div class="col-md-4">
-        <div v-if="validation" class="mt-2 alert alert-danger">
+        <!-- <div v-if="validation" class="mt-2 alert alert-danger">
           {{ validation }}
-        </div>
+        </div> -->
         <div class="card border-0 rounded shadow">
           <div class="card-body">
             <h4>LOGIN</h4>
             <hr />
-            <form @submit.prevent="login">
+            <form  @submit.prevent="login">>
               <div class="form-group">
                 <label>Email address</label>
                 <input
@@ -17,7 +17,6 @@
                   v-model="user.email"
                   class="form-control"
                   placeholder="Email Address"
-                  required
                 />
               </div>
               <div class="form-group">
@@ -50,59 +49,47 @@ import { useRouter } from "vue-router";
 import axios from "axios";
 
 export default {
-  setup() {
-    //inisialisasi vue router on Composition API
-    const router = useRouter();
+  data() {
+      return {
+        //state user
+        user: {
+          email: '',
+          password: '',
+        },
+        //validation
+        validation: []
+      }
+    },
 
-    //state user
-    const user = reactive({
-      email: "",
-      password: "",
-    });
+    methods: {
+      async login() {
 
-    //state validation
-    const validation = ref(false);
-
-    //state loginFailed
-    const loginFailed = ref(null);
-
-    //method login
-    function login() {
-      //define variable
-      let email = user.email;
-      let password = user.password;
-
-      //send server with axios
-      axios
-        .post("https://vue-be.herokuapp.com/api/v1/login", {
-          email,
-          password,
-        })
-        .then((response) => {
-          if (response.status === 200) {
-            //set token
-            localStorage.setItem("token", response.data.data.token);
-
+        await axios.post("https://vue-be.herokuapp.com/api/v1/login", {
+            email: this.user.email,
+            password: this.user.password
+          })
+          .then((response) => {
+         if(response.status === 200){
+           localStorage.setItem("token", response.data.data.token);
+           this.$store.commit("setUser", true)
+           this.$store.commit("getUser", response.data.data)
             //redirect ke halaman home
-            return router.push("/");
-          }
+            this.$router.push({
+              name: 'Index'
+            })
+         }
+          })
+          .catch(error => {
+            //assign validation
+           console.log(error);
+          })
+      }
 
-          //set state loggedIn to true
-          loginFailed.value = true;
-        })
-        .catch((error) => {
-          //set validation dari error response
-          // loginFailed.value = false;
-          validation.value = error.response.data.message;
-        });
+    },
+
+    mounted() {
+      console.log(this.$store.state.isUser);
+      console.log(this.$store.state.user.email);
     }
-
-    return {
-      user, // <-- state user
-      validation, // <-- state validation
-      loginFailed, // <-- state loggedIn
-      login, // <-- method login
-    };
-  },
 };
 </script>
